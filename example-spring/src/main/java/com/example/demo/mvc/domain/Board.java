@@ -6,8 +6,8 @@ import lombok.Data;
 
 @Data
 public class Board {
-	private int boardSeq;
+	private int board_seq;
 	private String title;
 	private String contents;
-	private Date regDate;	
+	private Date reg_date;	
 }

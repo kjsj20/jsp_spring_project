@@ -1,30 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE configuration PUBLIC "//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
-<configuration>
-	<!--mapper에서 매칭할 parmeter Type 별칭 설정-->
-	<typeAliases>
-		<typeAlias type="kr.or.iei.student.model.vo.Student" alias="student"/>
-	</typeAliases>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mvc.repository.BoardRepository">
+	<select id="getList" parameterType="com.example.demo.mvc.domain.Board" resultType="com.example.demo.mvc.domain.Board">
+		SELECT
+			B.BOARD_SEQ,
+			B.TITLE,
+			B.CONTENTS,
+			B.REG_DATE
+		FROM T_BOARD B
+		ORDER BY B.REG_DATE DESC
+	</select>
 	
+	<select id="get" parameterType="int" resultType="com.example.demo.mvc.domain.Board">
+		SELECT
+			B.BOARD_SEQ,
+			B.TITLE,
+			B.CONTENTS,
+			B.REG_DATE
+		FROM T_BOARD B
+		WHERE B.BOARD_SEQ = #{board_seq}
+	</select>
 	
-	<environments default="development">
+	<insert id="save" parameterType="com.example.demo.mvc.domain.Board" useGeneratedKeys="true" keyProperty="board_seq">
+		INSERT INTO T_BOARD
+		(
+			TITLE,
+			CONTENTS,
+			REG_DATE
+		)
+		VALUES
+		(
+			#{title},
+			#{contents},
+			NOW()
+		)
+	</insert>
 	
-		<!-- environment id를 구분하여 연결할 DB를 여려개 구성할 수 도 있음 -->
-		<environment id="development">
-			<transactionManager type="JDBC"/>
-				<dataSource type="POOLED">
-					<property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
-					<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
-					<property name="username" value="mybatis"/>
-					<property name="password" value="mybatis"/>
-				</dataSource>
-		</environment>
-		
-	</environments>
+	<update id="update" parameterType="com.example.demo.mvc.domain.Board" >
+		UPDATE T_BOARD
+		SET
+			TITLE = #{title},
+			CONTENTS = #{contents}			
+		WHERE BOARD_SEQ = #{board_seq}
+	</update>
 	
-	<mappers>
-		<mapper resource="/student/student-mapper.xml"/> 
-	</mappers>
-	
-	
-</configuration>
+	<delete id="delete" parameterType="int" >
+		DELETE FROM T_BOARD				
+		WHERE BOARD_SEQ = #{board_seq}
+	</delete>		
+</mapper>

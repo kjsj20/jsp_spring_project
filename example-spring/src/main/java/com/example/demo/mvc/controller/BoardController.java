@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.mvc.domain.Board;
@@ -18,6 +19,7 @@ import com.example.demo.mvc.service.BoardService;
  * @author 김재성
  */
 @RestController
+@RequestMapping("/board")
 public class BoardController {
 	@Autowired
 	private BoardService boardService;
@@ -46,8 +48,9 @@ public class BoardController {
 	 * @param board
 	 */
 	@GetMapping("/save")
-	public void save(Board board) {
+	public int save(Board board) {
 		boardService.save(board);
+		return board.getBoard_seq();
 	};
 	
 	/**
@@ -55,7 +58,14 @@ public class BoardController {
 	 * @param boardSeq
 	 */
 	@GetMapping("/delete/{boardSeq}")
-	public void delete(@PathVariable int boardSeq) {
+	public boolean delete(@PathVariable int boardSeq) {
+		Board board = boardService.get(boardSeq);
+		
+		if (board == null) {
+			return false;
+		}
+		
 		boardService.delete(boardSeq); 
+		return true;
 	};
 }
